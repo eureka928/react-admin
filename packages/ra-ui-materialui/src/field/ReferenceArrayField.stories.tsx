@@ -1,6 +1,6 @@
 import * as React from 'react';
 import fakeRestProvider from 'ra-data-fakerest';
-import { Alert, CardContent } from '@mui/material';
+import { Alert, Box, CardContent } from '@mui/material';
 import {
     IsOffline,
     ResourceDefinitionContextProvider,
@@ -14,6 +14,7 @@ import { DataTable, Pagination } from '../list';
 import { ReferenceArrayField } from './ReferenceArrayField';
 import { TextField } from './TextField';
 import { Show, SimpleShowLayout } from '../detail';
+import { ExportButton } from '../button';
 import { onlineManager } from '@tanstack/react-query';
 
 export default { title: 'ra-ui-materialui/fields/ReferenceArrayField' };
@@ -268,3 +269,28 @@ const RenderChildOnDemand = ({ children }) => {
         </>
     );
 };
+
+export const WithExportButton = () => (
+    <AdminContext
+        dataProvider={dataProvider}
+        i18nProvider={polyglotI18nProvider(() => englishMessages)}
+        defaultTheme="light"
+    >
+        <ResourceDefinitionContextProvider definitions={resouceDefs}>
+            <Show resource="bands" id={1} sx={{ width: 600 }}>
+                <SimpleShowLayout>
+                    <TextField source="name" />
+                    <ReferenceArrayField source="members" reference="artists">
+                        <Box mb={1}>
+                            <ExportButton />
+                        </Box>
+                        <DataTable bulkActionButtons={false}>
+                            <DataTable.Col source="id" />
+                            <DataTable.Col source="name" />
+                        </DataTable>
+                    </ReferenceArrayField>
+                </SimpleShowLayout>
+            </Show>
+        </ResourceDefinitionContextProvider>
+    </AdminContext>
+);

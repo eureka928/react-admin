@@ -30,7 +30,7 @@ import { Notification } from '../layout/Notification';
 import { TextInput } from '../input';
 import { Edit } from '../detail';
 import { SimpleForm } from '../form';
-import { SelectAllButton, BulkDeleteButton } from '../button';
+import { SelectAllButton, BulkDeleteButton, ExportButton } from '../button';
 import { onlineManager } from '@tanstack/react-query';
 
 export default { title: 'ra-ui-materialui/fields/ReferenceManyField' };
@@ -388,3 +388,19 @@ const RenderChildOnDemand = ({ children }) => {
         </>
     );
 };
+
+export const WithExportButton = () => (
+    <Wrapper
+        i18nProvider={polyglotI18nProvider(() => englishMessages)}
+        dataProvider={fullDataProvider}
+    >
+        <ReferenceManyField reference="books" target="author_id">
+            <Box mb={1}>
+                <ExportButton />
+            </Box>
+            <DataTable>
+                <DataTable.Col source="title" />
+            </DataTable>
+        </ReferenceManyField>
+    </Wrapper>
+);
