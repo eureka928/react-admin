@@ -3,13 +3,14 @@ import get from 'lodash/get.js';
 import isEqual from 'lodash/isEqual.js';
 
 import { removeEmpty } from '../../util';
-import { FilterPayload, RaRecord, SortPayload } from '../../types';
+import { Exporter, FilterPayload, RaRecord, SortPayload } from '../../types';
 import { useResourceContext } from '../../core';
 import usePaginationState from '../usePaginationState';
 import useSortState from '../useSortState';
 import { useRecordSelection } from './useRecordSelection';
 import { ListControllerResult } from './useListController';
 import { flattenObject } from '../../dataProvider/fetch';
+import { defaultExporter } from '../../export';
 
 const refetch = () => {
     throw new Error(
@@ -43,6 +44,7 @@ const refetch = () => {
  *
  * @param {UseListOptions} props
  * @param {RaRecord[]} props.data An array of records
+ * @param {Exporter} props.exporter: Optional. The exporter function for the ExportButton
  * @param {Boolean} props.isFetching: Optional. A boolean indicating whether the data is being loaded
  * @param {Boolean} props.isLoading: Optional. A boolean indicating whether the data has been loaded at least once
  * @param {Error | String} props.error: Optional. The error if any occurred while loading the data
@@ -58,6 +60,7 @@ export const useList = <RecordType extends RaRecord = any, ErrorType = Error>(
     const {
         data,
         error,
+        exporter = defaultExporter,
         filter = defaultFilter,
         isFetching = false,
         isLoading = false,
@@ -255,6 +258,7 @@ export const useList = <RecordType extends RaRecord = any, ErrorType = Error>(
         defaultTitle: '',
         error: error ?? null,
         displayedFilters,
+        exporter,
         filterValues,
         hasNextPage:
             finalItems?.total == null
@@ -291,6 +295,7 @@ export interface UseListOptions<
 > {
     data?: RecordType[];
     error?: ErrorType | null;
+    exporter?: Exporter | false;
     filter?: FilterPayload;
     isFetching?: boolean;
     isLoading?: boolean;

@@ -7,13 +7,20 @@ import lodashDebounce from 'lodash/debounce.js';
 import { removeEmpty, useEvent } from '../../util';
 import { useDataProvider, useGetManyReference } from '../../dataProvider';
 import { useNotify } from '../../notification';
-import { FilterPayload, Identifier, RaRecord, SortPayload } from '../../types';
+import {
+    Exporter,
+    FilterPayload,
+    Identifier,
+    RaRecord,
+    SortPayload,
+} from '../../types';
 import type { ListControllerResult, HandleSelectAllParams } from '../list';
 import usePaginationState from '../usePaginationState';
 import { useRecordSelection } from '../list/useRecordSelection';
 import useSortState from '../useSortState';
 import { useResourceContext } from '../../core';
 import { useRecordContext } from '../record';
+import { defaultExporter } from '../../export';
 
 /**
  * Fetch reference records, and return them when available
@@ -31,6 +38,7 @@ import { useRecordContext } from '../record';
  * @param {Object} props
  * @param {string} props.reference The linked resource name. Required.
  * @param {string} props.target The target resource key. Required.
+ * @param {Exporter} props.exporter The exporter function for the ExportButton
  * @param {Object} props.filter The filter applied on the recorded records list
  * @param {number} props.page the page number
  * @param {number} props.perPage the number of item per page
@@ -55,6 +63,7 @@ export const useReferenceManyFieldController = <
 ): ListControllerResult<ReferenceRecordType, ErrorType> => {
     const {
         debounce = 500,
+        exporter = defaultExporter,
         reference,
         target,
         filter = defaultFilter,
@@ -277,6 +286,7 @@ export const useReferenceManyFieldController = <
         defaultTitle: undefined,
         displayedFilters,
         error,
+        exporter,
         filterValues,
         hideFilter,
         isFetching,
@@ -314,6 +324,7 @@ export interface UseReferenceManyFieldControllerParams<
     ErrorType = Error,
 > {
     debounce?: number;
+    exporter?: Exporter | false;
     filter?: FilterPayload;
     page?: number;
     perPage?: number;

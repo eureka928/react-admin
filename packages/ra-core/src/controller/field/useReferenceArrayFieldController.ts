@@ -1,5 +1,5 @@
 import get from 'lodash/get.js';
-import { RaRecord, SortPayload } from '../../types';
+import { Exporter, RaRecord, SortPayload } from '../../types';
 import { useGetManyAggregate } from '../../dataProvider';
 import { ListControllerResult, useList } from '../list';
 import { useNotify } from '../../notification';
@@ -10,6 +10,7 @@ export interface UseReferenceArrayFieldControllerParams<
     ReferenceRecordType extends RaRecord = RaRecord,
     ErrorType = Error,
 > {
+    exporter?: Exporter | false;
     filter?: any;
     page?: number;
     perPage?: number;
@@ -41,12 +42,11 @@ const defaultFilter = {};
  * });
  *
  * @param {Object} props
+ * @param {Exporter} props.exporter The exporter function for the ExportButton
  * @param {Object} props.record The current resource record
  * @param {string} props.reference The linked resource name
  * @param {string} props.resource The current resource name
  * @param {string} props.source The key of the linked resource identifier
- *
- * @param {Props} props
  *
  * @returns {ListControllerResult} The reference props
  */
@@ -62,6 +62,7 @@ export const useReferenceArrayFieldController = <
     >
 ): ListControllerResult<ReferenceRecordType, ErrorType> => {
     const {
+        exporter,
         filter = defaultFilter,
         page = 1,
         perPage = 1000,
@@ -114,6 +115,7 @@ export const useReferenceArrayFieldController = <
     const listProps = useList<ReferenceRecordType, ErrorType>({
         data,
         error,
+        exporter,
         filter,
         isFetching,
         isLoading,
