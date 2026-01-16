@@ -66,6 +66,7 @@ const MyComponent = () => {
 `useList` expects an object with the following keys:
 
 * [`data`](#data)
+* [`exporter`](#exporter)
 * [`filter`](#filter)
 * [`filterCallback`](#filtercallback)
 * [`isFetching`](#isfetching)
@@ -87,6 +88,47 @@ const { data } = useList({
     ],
 });
 ```
+
+## `exporter`
+
+The exporter function to use when the `<ExportButton>` is clicked. Defaults to a function that exports the data as a CSV file.
+
+```jsx
+import {
+    downloadCSV,
+    useList,
+    ListContextProvider,
+    ExportButton,
+    DataTable,
+} from 'react-admin';
+import jsonExport from 'jsonexport/dist';
+
+const exporter = (records) => {
+    jsonExport(records, (err, csv) => downloadCSV(csv, 'actors'));
+};
+
+const MyComponent = () => {
+    const listContext = useList({
+        data: [
+            { id: 1, name: 'Arnold' },
+            { id: 2, name: 'Sylvester' },
+            { id: 3, name: 'Jean-Claude' },
+        ],
+        exporter,
+    });
+    return (
+        <ListContextProvider value={listContext}>
+            <ExportButton />
+            <DataTable resource="actors">
+                <DataTable.Col source="id" />
+                <DataTable.Col source="name" />
+            </DataTable>
+        </ListContextProvider>
+    );
+};
+```
+
+Set the `exporter` to `false` to disable the export functionality.
 
 ## `filter`
 
@@ -261,7 +303,7 @@ const { data } = useList({
 const {
     // Data
     data, // Array of the list records, e.g. [{ id: 123, title: 'hello world' }, { ... }
-    total, // Total number of results for the current filters, excluding pagination. Useful to build the pagination controls, e.g. 23      
+    total, // Total number of results for the current filters, excluding pagination. Useful to build the pagination controls, e.g. 23
     isPending, // Boolean, the value of the isPending parameter
     isFetching, // Boolean, the value of the isFetching parameter
     isLoading, // Boolean, the value of the isLoading parameter
@@ -288,6 +330,7 @@ const {
     onUnselectItems, // Callback to clear the record selection, e.g. onUnselectItems();
     // Misc
     defaultTitle, // Empty string
+    exporter, // The exporter function for the <ExportButton>
     resource, // undefined
     refetch, // Callback that throws an error, as refetch doesn't make sense for local data
 } = useList();
