@@ -158,6 +158,7 @@ export const Datagrid: React.ForwardRefExoticComponent<
     const {
         sort,
         data,
+        error,
         isPending,
         onSelect,
         onToggleItem,
@@ -226,6 +227,15 @@ export const Datagrid: React.ForwardRefExoticComponent<
                 size={size}
             />
         );
+    }
+
+    /**
+     * If there's an error, return null and let the parent List component
+     * handle the error display. This prevents showing ListNoResults
+     * when there's actually an error.
+     */
+    if (error) {
+        return null;
     }
 
     /**

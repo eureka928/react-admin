@@ -70,12 +70,16 @@ export const SingleFieldList = <RecordType extends RaRecord = any>(
         direction = 'row',
         ...rest
     } = props;
-    const { data, total, isPending } = useListContextWithProps(props);
+    const { data, total, isPending, error } = useListContextWithProps(props);
     const resource = useResourceContext(props);
     const createPath = useCreatePath();
 
     if (isPending === true) {
         return <LinearProgress />;
+    }
+
+    if (error) {
+        return null;
     }
 
     if (data == null || data.length === 0 || total === 0) {

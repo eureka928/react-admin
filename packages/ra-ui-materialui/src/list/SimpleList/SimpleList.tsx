@@ -17,6 +17,7 @@ import {
     RecordsIterator,
     sanitizeListRestProps,
     useGetRecordRepresentation,
+    useListContextWithProps,
     useRecordContext,
     useResourceContext,
     useTranslate,
@@ -97,6 +98,12 @@ export const SimpleList = <RecordType extends RaRecord = any>(
         resource,
         ...rest
     } = props;
+
+    const { error } = useListContextWithProps(props);
+
+    if (error) {
+        return null;
+    }
 
     return (
         <WithListContext
